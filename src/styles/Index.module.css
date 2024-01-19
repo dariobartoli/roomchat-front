@@ -1,0 +1,11 @@
+.body{
+    background: rgb(62,62,62);
+    background: linear-gradient(180deg, rgba(62,62,62,1) 0%, rgba(0,0,0,1) 100%);
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    gap: 2rem;
+    padding-top: 1rem;
+}

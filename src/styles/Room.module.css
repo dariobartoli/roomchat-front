@@ -1,0 +1,185 @@
+.body{
+    background: rgb(62,62,62);
+    background: linear-gradient(180deg, rgba(62,62,62,1) 0%, rgba(0,0,0,1) 100%);
+    min-height: 100dvh;
+    display: flex;
+    justify-content: center;
+}
+
+.chat__container{
+    width: 100%;
+    max-width: 700px;
+    background-color: rgb(92, 92, 92);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.chat__container>section{
+    height: 100%;
+}
+.room__title{
+    background-color: rgb(26, 26, 26);
+    color: white;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    padding: 5px;
+    font-size: 2rem;
+    height: 5vh;
+    position: relative;
+}
+.room__title>a>img{
+    width: 30px;
+    position: absolute;
+    left: 8px;
+    transition: 0.3s;
+}
+.room__title>a>img:hover{
+    scale: 1.1;
+    transition: 0.3s;
+    animation: rotateImg 2s linear infinite;
+}
+
+.message__container{
+    background-color: rgb(218, 218, 218);
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: 5px;
+    height: 90dvh;
+    overflow-y: auto;
+}
+/* Anchura del scrollbar */
+::-webkit-scrollbar {
+width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+background: #797979c4;
+filter: blur(10px);
+}
+
+/* Handle o thumb */
+::-webkit-scrollbar-thumb {
+background: #414141;
+border-radius: 6px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+background: #303030;
+}
+
+.my__message{
+    background-color: rgb(80, 80, 80);
+    padding: 3px;
+    padding-left: 6px;
+    border-radius: 5px;
+    min-width: 150px;
+    max-width: 220px;
+    align-self: flex-end;
+    display: flex;
+    flex-direction: column;
+    overflow-wrap: break-word;
+}
+.my__message>p:nth-child(1){
+    color: white;
+    text-decoration: underline;
+    font-size: 1.1rem;
+}
+.my__message>p:nth-child(3){
+    color: white;
+    font-size: 0.7rem;
+    align-self: flex-end;
+}
+.other__message{
+    background-color: rgb(114, 114, 114);
+    padding: 3px;
+    padding-left: 6px;
+    border-radius: 5px;
+    min-width: 150px;
+    max-width: 230px;
+    align-self: flex-start;
+    display: flex;
+    flex-direction: column;
+    overflow-wrap: break-word;
+}
+.other__message>p:nth-child(1){
+    color: white;
+    text-decoration: underline;
+    font-size: 1.1rem;
+}
+.other__message>p:nth-child(3){
+    color: white;
+    font-size: 0.7rem;
+    align-self: flex-end;
+}
+
+.input__message{
+    height: 5vh;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 3px;
+}
+.input__message>input{
+    width: 92%;
+    border-radius: 10px;
+    padding: 4px;
+    border: none;
+}
+.input__message>button{
+    background-color: transparent;
+    border: none;
+}
+.input__message>button>img{
+    width: 25px;
+    height: 25px;
+    margin-right: 15px;
+    align-self: center;
+    transition: 0.3s;
+    cursor: pointer;
+}
+.input__message>button:hover>img{
+    scale: 1.1;
+    transition: 0.3s;
+    animation: rotateImg 2s linear infinite;
+}
+.empty__message{
+    text-align: center;
+}
+
+@keyframes rotateImg {
+    0% {transform: rotate(-5deg);}
+    50% {transform: rotate(10deg);}
+    100% {transform: rotate(-5deg);}
+}
+
+@media (min-width: 500px) {
+    .other__message{
+        max-width: 300px;
+    }
+    .my__message{
+        max-width: 300px;
+    }
+}
+
+@media (min-width: 700px) {
+    .other__message{
+        max-width: 450px;
+    }
+    .my__message{
+        max-width: 450px;
+    }
+}
+
+@media (min-width: 1000px) {
+    .room__title>a>img{
+        top: 10px;
+    }
+}
+
+
+
+

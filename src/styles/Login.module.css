@@ -1,0 +1,58 @@
+.form {
+  padding: 15px;
+  background-color: rgb(26, 26, 26);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border: 1px solid rgb(22, 22, 22);
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0px 0px 8px rgba(255, 255, 255, 0.548);
+}
+
+.form>input{
+    border: none;
+    height: 25px;
+    border-radius: 2px;
+    border: 1px solid rgb(224, 224, 224);
+    padding: 2px;
+}
+.form>input:focus{
+    outline-offset: 1px;
+    outline-color: rgb(216, 216, 216);
+    outline-style: ridge;
+    outline-width: 1px;
+}
+
+.button {
+    margin-top: 15px;
+    color: white;
+    text-decoration: none;
+    font-size: 25px;
+    border: none;
+    background: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.button::before {
+  margin-left: auto;
+}
+
+.button::after,
+.button::before {
+  content: "";
+  width: 0%;
+  height: 2px;
+  background: #ebebeb;
+  display: block;
+  transition: 0.5s;
+}
+
+.button:hover::after,
+.button:hover::before {
+  width: 100%;
+}
