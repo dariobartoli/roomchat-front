@@ -1,13 +1,16 @@
 import {useState , useEffect} from 'react'
 import { chatAuth } from '../context/chatContext'
 import styles from '../styles/Rooms.module.css'
-
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios'
+import CreateRoom from './CreateRoom';
 
 const Rooms = () => {
     const [roomsData, setRoomsData] = useState([])
-    const {apiUrl, token, dataProfile, logged} = chatAuth()
-
+    const [passwords, setPasswords] = useState("")
+    const [viewCreateRoom, setViewCreateRoom] = useState(false)
+    const {apiUrl, token, dataProfile, logged, updateData, setUpdateData} = chatAuth()
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchRoomsData = async() => {
@@ -16,32 +19,66 @@ const Rooms = () => {
                 const roomsFilter = response.data.rooms.filter(room => {
                     return !dataProfile.rooms.some(profileRoom => profileRoom._id === room._id);
                 });
-                setRoomsData(roomsFilter)   
+                setRoomsData(roomsFilter)  
             } catch (error) {
                 console.log(error);
             }
         }
         fetchRoomsData()
-    }, [token, dataProfile])
+    }, [token, dataProfile, updateData])
+
+    const handlePasswordChange = (roomId, newPassword) => {
+        setPasswords(prevPasswords => ({
+          ...prevPasswords,
+          [roomId]: newPassword
+        }));
+      };
+
+    const joinRoom = async(id) => {
+        try {
+            const password = passwords[id];
+            const response = await axios.post(`${apiUrl}room/join`, {roomId: id, password},{
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            alert(response.data.message)
+            navigate(`/room/${id}`)
+            setUpdateData(!updateData)
+        } catch (error) {
+            alert(error.response.data.message)
+        }
+    }
     
     return (
     <div className={styles.rooms__container}>
-        {logged? <h2>Descubrir</h2> :""}
+        {logged? 
+        <div>
+            <h2>Descubrir</h2> 
+            <img src="../img/agregar.png" alt="" onClick={() => setViewCreateRoom(!viewCreateRoom)}/>
+        </div>
+        :""}
         <div className={styles.rooms__box__contain}>
             {roomsData.length>0? 
             roomsData.map((item) => (
                 <div key={item._id} className={styles.rooms__box}>
                     <h4>{item.name}</h4>
-                    <div>
-                        <p>Miembros:</p>
+                    <section>
+                        {item.password? <input type="password" placeholder='Contraseña' name="pass" id={`pass-${item._id}`} className={styles.input} value={passwords[item._id] || ''} onChange={(e) => handlePasswordChange(item._id, e.target.value)}/> : ""}
+                        {item.password? <button className={styles.button} onClick={() => joinRoom(item._id)}>Entrar</button> : <button className={`${styles.button__notpwd} ${styles.button}`} onClick={() => joinRoom(item._id)}>Entrar</button>}
+                    </section>
+                    <section>
+                        <img src="../img/usuario.png" alt="" className={styles.members__image}/>
                         <p>{item.members.length}</p>
-                    </div>
+                    </section>
                     {item.password? <img src="../img/candado.png" alt="" className={styles.rooms__image}/> : ""}
                     
                 </div>
             ))
             : "" }
         </div>
+        {viewCreateRoom?<CreateRoom viewCreateRoom={viewCreateRoom} setViewCreateRoom={setViewCreateRoom}/> : ""}
+        
     </div>
   )
 }

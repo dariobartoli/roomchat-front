@@ -25,7 +25,7 @@
     justify-content: center;
     padding: 5px;
     font-size: 2rem;
-    height: 5vh;
+    height: 6dvh;
     position: relative;
 }
 .room__title>a>img{
@@ -46,7 +46,7 @@
     flex-direction: column;
     gap: 0.3rem;
     padding: 5px;
-    height: 90dvh;
+    height: 89dvh;
     overflow-y: auto;
 }
 /* Anchura del scrollbar */
@@ -56,19 +56,18 @@ width: 8px;
 
 /* Track */
 ::-webkit-scrollbar-track {
-background: #797979c4;
-filter: blur(10px);
+background: transparent;
 }
 
 /* Handle o thumb */
 ::-webkit-scrollbar-thumb {
-background: #414141;
+background: #4b4b4b;
 border-radius: 6px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-background: #303030;
+background: #444444;
 }
 
 .my__message{

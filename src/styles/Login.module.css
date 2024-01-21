@@ -56,3 +56,65 @@
 .button:hover::before {
   width: 100%;
 }
+
+.register{
+  text-align: center;
+  margin-top: 3px;
+  color: white;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: 0.3s
+}
+.register:hover{
+  color: rgb(105, 105, 105);
+  transition: 0.3s
+}
+.registro__form{
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  position: relative;
+}
+
+.registro__form>input{
+  border: none;
+  height: 25px;
+  border-radius: 2px;
+  border: 1px solid rgb(224, 224, 224);
+  padding: 2px;
+}
+.registro__form>input:focus{
+  outline-offset: 1px;
+  outline-color: rgb(216, 216, 216);
+  outline-style: ridge;
+  outline-width: 1px;
+}
+
+.registro__form>button{
+  border: none;
+  background-color: transparent;
+  font-size: 1.2rem;
+  color: white;
+  margin-top: 8px;
+  border: 1px solid rgb(255, 255, 255);
+  padding: 2px;
+  border-radius: 2px;
+  width: 120px;
+  align-self: center;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.registro__form>button:hover{
+  color: black;
+  background-color: white;
+  border-color: rgb(85, 85, 85);
+  transition: 0.3s;
+}
+
+.see__pasword{
+  width: 20px;
+  position: absolute;
+  right: 4px;
+  top: 31px;
+  cursor: pointer;
+}

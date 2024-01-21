@@ -2,11 +2,27 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    margin-top: 2rem;
 }
 
-.rooms__container>h2{
+.rooms__container>div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+}
+.rooms__container>div>img{
+    width: 40px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.rooms__container>div>img:hover{
+    scale: 1.2;
+    transition: 0.3s;
+}
+.rooms__container>div>h2{
     color: white;
-    font-size: 3rem;
+    font-size: 2.5rem;
     text-align: center;
 }
 .rooms__box__contain{
@@ -16,6 +32,7 @@
     width: 100%;
     max-width: 700px;
     gap: 1rem;
+    margin-top: 1.2rem;
 }
 
 .rooms__box{
@@ -25,7 +42,8 @@
     border: 1px solid rgb(190, 190, 190);
     display: flex;
     flex-direction: column;
-    width: 120px;
+    width: 160px;
+    height: 135px;
     gap: 6px;
     position: relative;
 }
@@ -34,13 +52,71 @@
     text-decoration: underline;
     font-weight: 600;
 }
-.rooms__box>div{
+.rooms__box>section{
     display: flex;
     gap: 5px;
+}
+.rooms__box>section:nth-child(2){
+    flex-direction: column;
+}
+.rooms__box>section:nth-child(3){
+    position: absolute;
+    bottom: 2px;
+    left: 2px;
+}
+.members__image{
+    width: 20px;
 }
 .rooms__image{
     width: 20px;
     position: absolute;
     right: 2px;
     top: 2px;
+}
+
+.button__notpwd{
+    margin-top: 15px;
+}
+
+.button {
+    color: #2b2b2b;
+    text-decoration: none;
+    font-size: 25px;
+    border: none;
+    background: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.button::before {
+  margin-left: auto;
+}
+
+.button::after,
+.button::before {
+  content: "";
+  width: 0%;
+  height: 2px;
+  background: #2b2b2b;
+  display: block;
+  transition: 0.5s;
+}
+
+.button:hover::after,
+.button:hover::before {
+  width: 100%;
+}
+
+.input{
+    border: none;
+    height: 25px;
+    border-radius: 2px;
+    border: 1px solid rgb(224, 224, 224);
+    padding: 2px;
+}
+.input:focus{
+    outline-offset: 1px;
+    outline-color: rgb(165, 165, 165);
+    outline-style: ridge;
+    outline-width: 1px;
 }
