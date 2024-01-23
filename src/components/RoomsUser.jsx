@@ -13,8 +13,6 @@ const RoomsUser = () => {
             setRoomsData(dataProfile.rooms)
         }
     }, [dataProfile, token, updateData])
-
-    console.log(roomsData);
     
   return (
     <div className={styles.body}>
