@@ -2,18 +2,24 @@ import {useState, useEffect, useRef } from 'react'
 import { chatAuth } from '../context/chatContext'
 import axios from 'axios'
 import io from 'socket.io-client';
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import styles from '../styles/Room.module.css'
 import { NavLink } from 'react-router-dom';
+import Swal from 'sweetalert2'
+
 
 
 const Room = () => {
     const [roomData, setRoomData] = useState([])
     const [messages, setMessages] = useState([]);
-    const {token, apiUrl, userID, dataProfile} = chatAuth()
+    const [viewMenu, setViewMenu] = useState(false)
+    const [dataUsers, setDataUsers] = useState([])
+    const {token, apiUrl, userID, dataProfile, updateData, setUpdateData} = chatAuth()
     const [newMessage, setNewMessage] = useState('')
     const { id } = useParams();
     const messagesContainerRef = useRef(null);
+    const navigate = useNavigate()
+
 
     useEffect(() => {
         const fetchRoomData = async() => {
@@ -24,13 +30,15 @@ const Room = () => {
                     }
                 })
                 setRoomData(response.data.room)
-                let messageSchema = []
                 console.log(response.data.room);
+                let messageSchema = []
                 response.data.room.history.forEach(element => {
                     let date = element.createdAt.split('T')
                     let hour = date[1].split('.')
                     let hour2 = hour[0].split(':')
                     let hourFix
+                    let date1 = date[0].split('-')
+                    let date2 = date1[2]+"-"+date1[1]+"-"+date1[0]
                     if(hour2[0] === "00"){
                         hourFix = 21
                     }else if(hour2[0] === "01"){
@@ -45,6 +53,7 @@ const Room = () => {
                         content: element.message,
                         user: element.user[0].nickName,
                         time: hour3,
+                        date: date2
                     })
                 });
                 setMessages(messageSchema)
@@ -54,6 +63,34 @@ const Room = () => {
         }
         fetchRoomData()
     }, [token])
+
+    useEffect(() => {
+        if(roomData && roomData.members){
+            const members = roomData.members
+            const userInfo = async(userId) => {
+                try {
+                    const response = await axios(`${apiUrl}user/${userId}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    })
+                    return response.data.user
+                } catch (error) {
+                    console.error('Error', error);
+                }
+            }
+            const promises = members.map(item => userInfo(item))
+            Promise.all(promises)
+                .then(userData => {
+                    setDataUsers(userData)
+                })
+                .catch(error => {
+                    console.error('Error', error);
+                })
+        }
+    }, [token, roomData])
+
+
 
     useEffect(() => {
         if (token && roomData && roomData.name) {
@@ -67,9 +104,9 @@ const Room = () => {
                     user: senderName, // Aquí debes obtener el nombre del usuario
                     time: hour3, // Puedes personalizar el formato de la hora
                     content: message,
+                    date: "no"
                 };
                 setMessages(prevMessages => [...prevMessages, newMessage]);
-                console.log('Mensaje desde el servidor:', message);
             });
         
             // Limpieza del efecto
@@ -90,20 +127,9 @@ const Room = () => {
                 }
             })
             setNewMessage('')
-/*             // Aquí puedes procesar la respuesta del servidor
-            const { user, content, time } = response.data.newMessage;
-
-            // Puedes utilizar la información del usuario para mostrar el mensaje
-            const newMessageData = {
-                user: user.nickName, // o cualquier propiedad que contenga el nombre de usuario
-                content,
-                time
-            };
-            // Actualizar el estado de los mensajes en tu componente
-
-        setMessages((prevMessages) => [...prevMessages, newMessageData]); */
         } catch (error) {
             console.error('Error', error);
+            console.log('Entre al error');
             console.log(error.response.data.message);
         }
       }
@@ -115,6 +141,58 @@ const Room = () => {
         }
       }, [messages]);
 
+      const deleteRoom = async(id)=>{
+        try {
+            const response = await axios.delete(`${apiUrl}room/${id}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            setUpdateData(!updateData)
+            Swal.fire({
+                icon: "success",
+                title: response.data.message,
+                confirmButtonText: "Cerrar",
+                confirmButtonColor: '#7c7c7c'
+            }).then(() => {
+                navigate('/')
+            });
+        } catch (error) {
+            console.error('Error', error);
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: error.response.data.message,
+                confirmButtonText: "Cerrar",
+                confirmButtonColor: '#7c7c7c'
+            })
+        }
+      }
+
+      const leaveRoom = async(id)=>{
+        try {
+            const response = await axios.put(`${apiUrl}room/`, {id:id} ,{
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            setUpdateData(!updateData)
+            Swal.fire({
+                icon: "success",
+                title: response.data.message,
+                confirmButtonText: "Cerrar",
+                confirmButtonColor: '#7c7c7c'
+            }).then(() => {
+                navigate('/')
+            });
+        } catch (error) {
+            console.error('Error', error);
+            console.log(error.response.data.message);
+        }
+      }
+
+      
+
     
   return (
     <div className={styles.body}>
@@ -125,13 +203,21 @@ const Room = () => {
                         <img src="../img/volver.png" alt="" />
                     </NavLink>
                     <h2>{roomData.name}</h2>
+                    <img src="../img/tres-puntos.png" alt="" onClick={() => setViewMenu(!viewMenu)}/>
                 </div>
                 <div className={styles.message__container} ref={messagesContainerRef}>
                     {messages.length != 0? messages.map((msg, index) => (
-                        <div key={index} className={`${msg.user == dataProfile.nickName ? styles.my__message : styles.other__message}`}>
-                            <p>{msg.user}</p>
-                            <p>{msg.content}</p>
-                            <p>{msg.time}</p>
+                        <div key={index} >
+                            {/* Mostrar la fecha solo si es diferente de la fecha anterior */}
+                            {(index === 0 || messages[index - 1].date !== msg.date) && msg.date != "no"? (
+                                <p className={styles.date}>{msg.date}</p>
+                            ) : null}
+                            <div className={`${msg.user == dataProfile.nickName ? styles.my__message : styles.other__message}`}>
+                                <p>{msg.user}</p>
+                                <p>{msg.content}</p>
+                                <p>{msg.time}</p>
+                                <div className={`${msg.user == dataProfile.nickName ? styles.my__div : styles.other__div}`}></div>
+                            </div>
                         </div>
                     )): <div className={styles.empty__message}>No hay mensajes</div>}
                 </div>
@@ -148,6 +234,24 @@ const Room = () => {
                     <img src="../img/enviar.png" alt=""/>
                 </button>
             </form>
+
+            {viewMenu? 
+            <div className={styles.menu__container}>
+                <div>
+                    <h4>Miembros: </h4>
+                    <ul className={styles.menu__list}>
+                        {dataUsers? dataUsers.map((item) => (
+                            <div key={item._id}>
+                                <li>{item.nickName}</li>
+                            </div>
+                        )): ""}
+                    </ul>
+                </div>
+                <h5 onClick={() => leaveRoom(roomData._id)}>Salir de la sala</h5>
+                <h5 onClick={() => deleteRoom(roomData._id)}>Eliminar sala</h5>
+            </div>
+            : ""}
+
         </div>
     </div>
   )

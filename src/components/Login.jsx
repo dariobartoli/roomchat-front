@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { chatAuth } from '../context/chatContext'
 import axios from 'axios'
 import styles from '../styles/Login.module.css'
+import Swal from 'sweetalert2'
+
 
 const Login = () => {
     const [nickName, setNickName] = useState("")
@@ -25,13 +27,33 @@ const Login = () => {
                 localStorage.setItem('loggedChat', true);
                 setNickName('')
                 setPassword('')
-                console.log(response.data.message);
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                      toast.onmouseenter = Swal.stopTimer;
+                      toast.onmouseleave = Swal.resumeTimer;
+                    }
+                });
+                Toast.fire({
+                icon: "success",
+                title: response.data.message
+                });
             })
             .catch(error => {
-                console.error('Error de inicio de sesión:', error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: error.response.data.message,
+                    confirmButtonText: "Cerrar",
+                    confirmButtonColor: '#7c7c7c'
+                  });
             });
         } catch (error) {
-            console.log(error.message);
+            console.log(error);
         }
     }
     
@@ -48,10 +70,22 @@ const Login = () => {
         e.preventDefault()
         try {
             const response = await axios.post(`${apiUrl}auth/register`, {nickName: newNickName, password: newPassword})
-            alert(response.data.message)
             setViewRegistro(!viewRegistro)
+            Swal.fire({
+                icon: "success",
+                title: response.data.message,
+                confirmButtonText: "Cerrar",
+                confirmButtonColor: '#7c7c7c'
+            });
         } catch (error) {
-            alert(error.response.data.message)
+            console.log(error);
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: error.response.data.message,
+                confirmButtonText: "Cerrar",
+                confirmButtonColor: '#7c7c7c'
+            });
         }
     }
 
@@ -60,8 +94,8 @@ const Login = () => {
     <div>
         {!logged?
         <form className={styles.form}>
-            <input type="text" name="" id="" placeholder='Nickname' value={nickName} onChange={(e) => setNickName(e.target.value)}/>
-            <input type="password" name="" id="" placeholder='Contraseña' value={password} onChange={(e) => setPassword(e.target.value)}/>
+            <input type="text" name="" id="nick" placeholder='Nickname' value={nickName} onChange={(e) => setNickName(e.target.value)}/>
+            <input type="password" name="" id="pass" placeholder='Contraseña' value={password} onChange={(e) => setPassword(e.target.value)}/>
             <button onClick={login} className={styles.button}>Iniciar Sesión</button>
             <p className={styles.register} onClick={() => setViewRegistro(!viewRegistro)}>Registro</p>
             {viewRegistro? 

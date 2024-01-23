@@ -6,20 +6,22 @@ import styles from '../styles/RoomUsers.module.css'
 
 const RoomsUser = () => {
     const [roomsData, setRoomsData] = useState([])
-    const {token, dataProfile, updateData} = chatAuth()
+    const {token, dataProfile, updateData, logged} = chatAuth()
 
     useEffect(() => {
         if(dataProfile && dataProfile.rooms){
             setRoomsData(dataProfile.rooms)
         }
     }, [dataProfile, token, updateData])
-    
+
+    console.log(roomsData);
     
   return (
     <div className={styles.body}>
-        {roomsData.length>0? 
-        <h2>Tus salas</h2>: 
-        ""}
+        {logged?
+        <h2>Tus salas</h2>
+        : ""}
+        {logged? 
         <div className={styles.rooms__container}>
             {roomsData.length>0? 
             roomsData.map((item) => (
@@ -31,8 +33,9 @@ const RoomsUser = () => {
                     </div>
                 </NavLink>
             ))
-            : ""}
+            : <p style={{color:"white", textAlign:"center"}}>No estás en ninguna sala, ingresa a una para empezar a chatear</p>}
         </div>
+        :""}
     </div>
   )
 }

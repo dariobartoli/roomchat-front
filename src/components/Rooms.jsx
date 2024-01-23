@@ -4,6 +4,8 @@ import styles from '../styles/Rooms.module.css'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'
 import CreateRoom from './CreateRoom';
+import Swal from 'sweetalert2'
+
 
 const Rooms = () => {
     const [roomsData, setRoomsData] = useState([])
@@ -32,21 +34,39 @@ const Rooms = () => {
           ...prevPasswords,
           [roomId]: newPassword
         }));
-      };
+    };
 
     const joinRoom = async(id) => {
         try {
-            const password = passwords[id];
+            let password = passwords[id];
+            if(password == undefined){
+                password = ""
+            }
             const response = await axios.post(`${apiUrl}room/join`, {roomId: id, password},{
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
             })
-            alert(response.data.message)
-            navigate(`/room/${id}`)
-            setUpdateData(!updateData)
+            Swal.fire({
+                icon: "success",
+                title: response.data.message,
+                text: `Sala: ${response.data.room.name}`,
+                confirmButtonText: "Cerrar",
+                confirmButtonColor: '#7c7c7c'
+            }).then(() => {
+                navigate(`/room/${id}`)
+                setUpdateData(!updateData)
+            });
+            console.log(response.data);
         } catch (error) {
-            alert(error.response.data.message)
+            console.error('error', error)
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: error.response.data.message,
+                confirmButtonText: "Cerrar",
+                confirmButtonColor: '#7c7c7c'
+            });
         }
     }
     

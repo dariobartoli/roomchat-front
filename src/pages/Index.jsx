@@ -1,8 +1,9 @@
 import React from 'react'
-import Login from '../components/login'
+import Login from '../components/Login'
 import Rooms from '../components/Rooms'
 import RoomsUser from '../components/RoomsUser'
 import styles from '../styles/Index.module.css'
+import Logout from '../components/Logout'
 
 const Index = () => {
   return (
@@ -10,6 +11,7 @@ const Index = () => {
         <Login/>
         <RoomsUser/>
         <Rooms/>
+        <Logout/>
     </div>
   )
 }
