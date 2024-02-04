@@ -1,12 +1,12 @@
 .body{
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    padding-top: 1rem;
 }
 
 .body>h2{
     color: rgb(255, 255, 255);
-    font-size: 3.5rem;
+    font-size: 2.5rem;
     text-align: center;
     text-shadow: 2px 2px 1px black;
 }
@@ -28,7 +28,7 @@
     text-decoration: none;
     justify-content: center;
     gap: 7px;
-    width: 200px;
+    width: 150px;
     background-color: rgb(124, 124, 124);
     border: 1px solid rgb(61, 61, 61);
     padding: 4px;
@@ -43,7 +43,7 @@
 }
 .room__box>h4{
     text-align: center;
-    font-size: 1.3rem;
+    font-size: 1rem;
 }
 .room__box>div{
     display: flex;
@@ -52,5 +52,21 @@
 }
 .room__box__image{
     width: 20px;
+}
+
+@media (width> 650px) {
+    .body>h2{
+        font-size: 3.5rem;
+    }
+    .room__box{
+        width: 200px;
+    }
+    .room__box>h4{
+        font-size: 1.3rem;
+    }
+    .body{
+        gap: 1rem;
+        padding-top: 0px;
+    }
 }
 

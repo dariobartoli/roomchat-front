@@ -73,7 +73,7 @@ const Rooms = () => {
     return (
     <div className={styles.rooms__container}>
         {logged? 
-        <div>
+        <div className={styles.rooms_title__contain}>
             <h2>Descubrir</h2> 
             <img src="../img/agregar.png" alt="" onClick={() => setViewCreateRoom(!viewCreateRoom)}/>
         </div>
